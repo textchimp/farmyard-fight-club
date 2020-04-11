@@ -27,6 +27,9 @@ reload
 
 # (NOTHING TO SEE YET)
 # (AWAIT FURTHER INSTRUCTIONS)
+
+# Why not download some Zoom virtual background videos while you wait:
+# https://pixabay.com/videos/search/abstract/
 ```
 
 
