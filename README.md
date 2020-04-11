@@ -1,17 +1,36 @@
 
 # Farmyard Fight Club
-### A three.js 3D Coronavirus Codealong
+### A Three.js 3D Coronavirus Codealong
 
 ___
 
 
+#### INSTRUCTIONS
+
+Clone this repo to somewhere familiar:
+
+```bash
+git clone https://github.com/textchimp/farmyard-fight-club.git ~
+
+# go there:
+cd ~/farmyard-fight-club
+
+# recommended: install 'reload' package
+npm install -g reload
+
+# open editor
+atom .
+
+# start reload server
+reload
+```
 
 
 
 
 
-CREDITS
--------
+
+#### CREDITS
 
 3D Character Models: https://opengameart.org/users/quaternius
 
