@@ -15,14 +15,18 @@ git clone https://github.com/textchimp/farmyard-fight-club.git ~
 # Go there:
 cd ~/farmyard-fight-club
 
-# Recommended: install 'reload' package
-npm install -g reload
 
 # Open editor
 atom .
 
+# Recommended: install 'reload' package
+npm install -g reload
+
 # Start reload server
 reload
+
+# (NOTHING TO SEE YET)
+# (AWAIT FURTHER INSTRUCTIONS)
 ```
 
 
