@@ -7,26 +7,26 @@ ___
 
 #### INSTRUCTIONS
 
-Clone this repo to somewhere familiar:
 
 ```bash
+# Clone this repo to somewhere familiar:
 git clone https://github.com/textchimp/farmyard-fight-club.git ~
 
-# go there:
+# Go there:
 cd ~/farmyard-fight-club
 
-# recommended: install 'reload' package
+# Recommended: install 'reload' package
 npm install -g reload
 
-# open editor
+# Open editor
 atom .
 
-# start reload server
+# Start reload server
 reload
 ```
 
 
-
+![screenshot](screenshot.png)
 
 
 
