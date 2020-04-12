@@ -1,6 +1,6 @@
 
 // Everything starts here
-
+import characterLoader from '/js/character.js';
 const app = {}; // global namespace object
 
 app.controls = {
@@ -10,6 +10,11 @@ app.controls = {
 
 app.init = () => {
   console.log('Initialising...');
+  console.log(characterLoader);
+  app.scene = new THREE.Scene();
+    console.log('WE NOW HAVE A SCENE');
+
+    characterLoader(app);
 
   app.gui = new dat.GUI(); // control panel!
 
@@ -18,9 +23,6 @@ app.init = () => {
   });
 
   app.gui.add( app.controls, 'debug' );
-
-
-  app.scene = new THREE.Scene();
 
   app.width = window.innerWidth;
   app.height = window.innerHeight;
