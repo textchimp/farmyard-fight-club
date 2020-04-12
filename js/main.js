@@ -54,13 +54,13 @@ app.init = () => {
   app.ambient = new THREE.AmbientLight( 0xEEEEEE );
   app.scene.add( app.ambient );
 
-  // Make a cube
-  const cubeGeometry = new THREE.BoxGeometry( 4, 4, 4 );
-  const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xFF8F00 });
-
-  const cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
-  cube.position.set( 10, 10, 5 );
-  app.scene.add( cube );
+  // // Make a cube
+  // const cubeGeometry = new THREE.BoxGeometry( 4, 4, 4 );
+  // const cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xFF8F00 });
+  //
+  // const cube = new THREE.Mesh( cubeGeometry, cubeMaterial );
+  // cube.position.set( 10, 10, 5 );
+  // app.scene.add( cube );
 
   // app.axes = new THREE.AxesHelper( 40 );
   // app.scene.add( app.axes );
@@ -95,10 +95,11 @@ app.init = () => {
   app.stats = new Stats();
   document.getElementById('stats').appendChild( app.stats.domElement );
 
-
   // Start the main draw/animation loop
   // Now started after models load in character.js
   // requestAnimationFrame( app.animate );
+
+  app.initCharacters();  // run the setup code in characters.js
 
 }; // app.init()
 
