@@ -75,12 +75,8 @@ app.initCharacters = () => {
     console.log('All models loaded!');
 
     // Create some characters
-    app.characters.player = new Character(
-      'player',
-      app.models.skeleton // which model to use
-    );
+    app.addCharacter( 'player', app.models.skeleton );
 
-    app.scene.add( app.characters.player.object );
 
     // We should only start the animation/draw loop
     // after the models are loaded
@@ -89,7 +85,10 @@ app.initCharacters = () => {
   }; // modelManager.onLoad
 
 
-  // When are they are all finished loading?
+  app.addCharacter = ( name, model, options={} ) => {
+    const char = new Character( name, model, options );
+    app.scene.add( char.object );
+  };
 
 };  // app.initCharacters();
 
