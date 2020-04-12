@@ -101,6 +101,8 @@ app.init = () => {
 
   app.initCharacters();  // run the setup code in characters.js
 
+  app.initKeys();  // setup keyboard handlers
+
 }; // app.init()
 
 app.lastAnimateTime = 0;

@@ -77,7 +77,8 @@ app.initCharacters = () => {
     console.log('All models loaded!');
 
     // Create some characters
-    app.addCharacter( 'player', app.models.cow, { position: new THREE.Vector3(5,5,5) } );
+    app.addCharacter( 'player',   app.models.cow, { position: new THREE.Vector3(0, 0, 0) });
+    app.addCharacter( 'computer', app.models.zebra, { position: new THREE.Vector3(-5, 0, -5) } );
 
     window.p = app.characters.player; // just for debugging!
 
