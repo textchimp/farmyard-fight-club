@@ -36,6 +36,42 @@ reload
 ![screenshot](screenshot.png)
 
 
+## GOALS
+
+- Make a fun game and have fun
+- Learn about stuff like 3D graphics and game logic and maths and stuff
+- Practice coding
+- Catchup... so lonely
+
+## Plan
+
+- Make a 3D scene using three.js
+- Create some objects: cube, land, backgrounds
+- Load some 3D models
+- Animate the models, switch between animations
+- Animation render loop
+- Controls: move character using keyboard
+- Camera POV changes: from world to player
+
+## Dreams / Wishlist
+
+- More models!
+- Decent game AI?????
+- Higher-res skybox images
+- More actual game logic - how do you play the game?
+  Do you just knock over other animals?
+  Can you shoot them with laser beams from your eyes?
+  Can you push each other off the edge of a platform?
+- Huge explosions
+- Sounds! Footsteps etc, dying sounds
+- Networked multiplayer mode - Firebase?
+
+
+
+
+
+
+
 
 #### CREDITS
 
