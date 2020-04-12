@@ -97,7 +97,8 @@ app.init = () => {
 
 
   // Start the main draw/animation loop
-  requestAnimationFrame( app.animate );
+  // Now started after models load in character.js
+  // requestAnimationFrame( app.animate );
 
 }; // app.init()
 

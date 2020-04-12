@@ -11,10 +11,12 @@ app.models = {
   horse: { url: 'assets/models/characters/Horse.gltf'},
   pig: { url: 'assets/models/characters/Pig.gltf'},
   sheep: { url: 'assets/models/characters/Sheep.gltf'},
-  skeleton: { url: 'assets/models/characters/Skeleton.gltf'},
+  skeleton: { url: 'assets/models/characters/Skeleton.gltf', process: () => {} },
 };
 
-const gltfLoader = new THREE.GLTFLoader();
+// Lets us run a callback when all models are loaded
+const modelManager = new THREE.LoadingManager();
+const gltfLoader = new THREE.GLTFLoader( modelManager );
 
 // Load all models
 for( const name in app.models ){
@@ -30,8 +32,33 @@ for( const name in app.models ){
       0, // THREE.Math.randFloatSpread(20),
       THREE.Math.randFloatSpread(20)
     );
+
+    // Annoying special-case code for skeleton
+    // TODO: define special-case processing functions
+    // inside the object for each model, i.e.
+    // app.models.skeleton.process = () => {}
+    if( name === 'skeleton' ){
+      gltf.scene.traverse( child => {
+        if( child.type === 'SkinnedMesh' ){
+          child.material.metalness = 0; // too metal
+          child.material.color.setRGB( 0.7, 0.7, 0.5 );
+        }
+      });
+    } // skeleton
+
     app.scene.add( model.gltf.scene );
   }); // gltf onload callback
 
-
 } // for each model
+
+modelManager.onLoad = () => {
+  console.log('All models loaded!');
+
+  // We should only start the animation/draw loop
+  // after the models are loaded
+  requestAnimationFrame( app.animate );
+
+}; // modelManager.onLoad
+
+
+// When are they are all finished loading?
