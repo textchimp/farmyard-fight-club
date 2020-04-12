@@ -103,13 +103,26 @@ app.init = () => {
 
 }; // app.init()
 
-app.animate = () => {
+app.lastAnimateTime = 0;
+
+app.animate = (now) => {
+
+  now *= 0.001; // convert ms to seconds, for the animation mixer
+  const deltaTime = now - app.lastAnimateTime;
+  app.lastAnimateTime = now;
+
+  // app.characters.player.update()
+  for( const name in app.characters ){
+    const char = app.characters[ name ];
+    char.update( deltaTime );
+  } // should use app.eachChar()
 
   app.stats.update();
   app.renderer.render( app.scene, app.camera ); // actually draw the scene
   requestAnimationFrame( app.animate );
 
 }; // app.animate()
+
 
 window.addEventListener('load', app.init );
 

@@ -75,7 +75,7 @@ app.initCharacters = () => {
     console.log('All models loaded!');
 
     // Create some characters
-    app.addCharacter( 'player', app.models.skeleton );
+    app.addCharacter( 'player', app.models.cow );
 
 
     // We should only start the animation/draw loop
@@ -103,6 +103,12 @@ class Character {
     this.modelName = model.name; // ???
     this.opts = options;
 
+    this.animation = {
+      allActions: {},
+      action: null,
+      mixer: null
+    };
+
     // Make a clone of the loaded model data
     this.modelClone = THREE.SkeletonUtils.clone( model.gltf.scene );
     this.object = new THREE.Object3D();
@@ -111,6 +117,39 @@ class Character {
     // and positioning) doesn't work if you don't do it
     this.object.add( this.modelClone );
 
+    // pass in original model
+    this.initialiseAnimations( model );
+
   } // constructor()
+
+
+  initialiseAnimations( model ){
+
+    const defaultAnimation = 'idle';
+
+    this.animation.mixer = new THREE.AnimationMixer( this.modelClone );
+
+    // Init all clips for this model's list of animations
+    // (clips are controlled by the mixer, allow start/stop/xfade etc)
+    for( const animName in model.animations ){
+      const action = this.animation.mixer.clipAction( model.animations[animName] );
+      action.name = animName; // for us to use later (to find out which animation finished)
+      this.animation.allActions[ animName ] = action;
+    } // for each animation
+
+    // Start the default animation playing
+    this.animation.action = this.animation.allActions[ defaultAnimation ];
+    console.log('default action starting:', this.animation.action );
+    this.animation.action.play();
+
+  } // initialiseAnimations()
+
+  // This is called by app.animate, i.e. every re-render (60 times/sec)
+  update( deltaTime ){
+
+    this.animation.mixer.update( deltaTime ); // update the playing animation
+
+  } // update()
+
 
 } // class Character
