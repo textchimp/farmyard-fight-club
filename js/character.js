@@ -41,13 +41,15 @@ app.initCharacters = () => {
         // console.log(name, clip.name);
         const clipName = clip.name.toLowerCase();
         model.animations[ clipName ] = clip;
+
+        // TODO: change the duration properties directly in the model .gltf file
+        // to avoid this special-case code
+        if( clipName === 'walk' || clipName === 'walkslow' ){
+          clip.duration /=  2; // half the length of this animation!
+        }
+
       }); // each animation
 
-      // model.gltf.scene.position.set(
-      //   THREE.Math.randFloatSpread(20),
-      //   0, // THREE.Math.randFloatSpread(20),
-      //   THREE.Math.randFloatSpread(20)
-      // );
 
       // Annoying special-case code for skeleton
       // TODO: define special-case processing functions
@@ -77,6 +79,7 @@ app.initCharacters = () => {
     // Create some characters
     app.addCharacter( 'player', app.models.cow );
 
+    window.p = app.characters.player; // just for debugging!
 
     // We should only start the animation/draw loop
     // after the models are loaded
@@ -143,6 +146,19 @@ class Character {
     this.animation.action.play();
 
   } // initialiseAnimations()
+
+
+  changeAnimation( name ){
+
+    this.animation.action.crossFadeTo( this.animation.allActions[name], 1, true );
+    this.animation.action = this.animation.allActions[name];  // TODO: is this a problem???
+    this.animation.name = name;
+    this.animation.action.enabled = true;  // Gets disabled after last crossfade
+    this.animation.action.timeScale = 1;
+    this.animation.action.reset().play();
+
+  } // changeAnimation()
+
 
   // This is called by app.animate, i.e. every re-render (60 times/sec)
   update( deltaTime ){
