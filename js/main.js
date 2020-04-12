@@ -5,7 +5,9 @@ const app = {}; // global namespace object
 
 app.controls = {
   spotlightColour: '#FFFFFF',
-  debug: false
+  debug: false,
+  playerState: '',
+  walkSpeed: 0.3,
 };
 
 app.init = () => {
@@ -19,6 +21,9 @@ app.init = () => {
 
   app.gui.add( app.controls, 'debug' );
 
+  app.gui.add( app.controls, 'walkSpeed', 0, 1);
+
+  app.gui.add( app.controls, 'playerState' ).listen();
 
   app.scene = new THREE.Scene();
 
@@ -101,7 +106,10 @@ app.init = () => {
 
   app.initCharacters();  // run the setup code in characters.js
 
+  app.initScenery();
+
   app.initKeys();  // setup keyboard handlers
+
 
 }; // app.init()
 
@@ -112,6 +120,10 @@ app.animate = (now) => {
   now *= 0.001; // convert ms to seconds, for the animation mixer
   const deltaTime = now - app.lastAnimateTime;
   app.lastAnimateTime = now;
+
+  // Deal with held-down keys that trigger repeating actions
+  // TODO: use a changeState instead? ('turning')
+  app.keys.handleHeldKeys();
 
   // app.characters.player.update()
   for( const name in app.characters ){
@@ -135,3 +147,10 @@ window.addEventListener('resize', () => {
   app.camera.updateProjectionMatrix();
   app.renderer.setSize( app.width, app.height );
 });
+
+app.lib = {
+  randArray( array ){
+    const index = THREE.Math.randInt(0, array.length-1);
+    return array[index];
+  },
+};

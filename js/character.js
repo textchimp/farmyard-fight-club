@@ -82,6 +82,26 @@ app.initCharacters = () => {
 
     window.p = app.characters.player; // just for debugging!
 
+
+    for( let i = 0; i < 100; i++ ){
+
+      // Find a random model to use
+      const names = Object.keys( app.models );
+      const randomIndex = Math.floor( Math.random() * names.length );
+      const modelName = names[ randomIndex ];
+      console.log(names, modelName);
+      app.addCharacter( `${modelName}${i}`, app.models[modelName], {
+        position: new THREE.Vector3(
+          THREE.Math.randFloatSpread( 100 ),
+          0, // THREE.Math.randFloatSpread( 100 ),
+          THREE.Math.randFloatSpread( 100 ),
+        ),
+        // rotation: new Vector3()
+      });
+
+    } // add random characters
+
+
     // We should only start the animation/draw loop
     // after the models are loaded
     requestAnimationFrame( app.animate );
@@ -105,12 +125,21 @@ class Character {
     rotation:  new THREE.Vector3(), //{ x: 0, y: 0, z: 0 },
   };
 
+  defaultState = {
+    action: '',
+    lastAction: '',
+    // position: don't define here, it's in this.object.position
+    velocity: new THREE.Vector3(),
+    speed: 0
+  };
+
   constructor( name, model, options=this.defaultOptions ){
     console.log('Character()', name, model, options);
 
     this.name = name;
     this.modelName = model.name; // ???
     this.opts = { ...this.defaultOptions, ...options };  // merge defaults with passed opts
+    this.state = { ...this.defaultState }; // TODO: gotcha? Nested objects not cloned, copied by ref
 
     this.animation = {
       allActions: {},
@@ -129,6 +158,8 @@ class Character {
 
     // pass in original model
     this.initialiseAnimations( model );
+
+    this.changeState( 'idle' );
 
   } // constructor()
 
@@ -149,8 +180,7 @@ class Character {
 
     // Start the default animation playing
     this.animation.action = this.animation.allActions[ defaultAnimation ];
-    console.log('default action starting:', this.animation.action );
-    this.animation.action.play();
+    // this.animation.action.play();
 
   } // initialiseAnimations()
 
@@ -170,9 +200,51 @@ class Character {
   // This is called by app.animate, i.e. every re-render (60 times/sec)
   update( deltaTime ){
 
+    // this.object.position.x += this.state.velocity.x;
+    // this.object.position.y += this.state.velocity.y;
+    // this.object.position.z += this.state.velocity.z;
+    // this.object.position.add( this.state.velocity );
+
+    // Which direction are we currently facing in?
+    const direction = new THREE.Vector3();
+    this.object.getWorldDirection( direction );
+
+    // Walk in that direction at a certain speed
+    this.object.position.addScaledVector( direction, this.state.speed  );
+
     this.animation.mixer.update( deltaTime ); // update the playing animation
 
   } // update()
+
+
+  changeState( state, opts={} ){
+
+    console.log('changeState', state );
+
+    if( state === this.state.action ){
+      return; // don't do anything if we're already in this state
+    }
+
+    this.state.lastAction = this.state.action;
+    this.state.action = state;
+
+    app.controls.playerState = state; // for debugging
+
+    switch( state ){
+    case 'walk':
+      // this.state.velocity = new THREE.Vector3( 0, 0, 0.1 );
+      this.state.speed = app.controls.walkSpeed;
+      break;
+    case 'idle':
+      // this.state.velocity = new THREE.Vector3( 0, 0, 0.1 );
+      this.state.speed = 0;
+      break;
+
+    } // switch( state )
+
+    this.changeAnimation( opts.action || state );
+
+  } // changeState()
 
 
 } // class Character
