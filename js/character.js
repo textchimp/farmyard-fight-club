@@ -87,6 +87,7 @@ app.initCharacters = () => {
 
   app.addCharacter = ( name, model, options={} ) => {
     const char = new Character( name, model, options );
+    app.characters[ name ] = char;
     app.scene.add( char.object );
   };
 
