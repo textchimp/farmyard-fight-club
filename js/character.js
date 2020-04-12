@@ -77,7 +77,7 @@ app.initCharacters = () => {
     console.log('All models loaded!');
 
     // Create some characters
-    app.addCharacter( 'player', app.models.cow );
+    app.addCharacter( 'player', app.models.cow, { position: new THREE.Vector3(5,5,5) } );
 
     window.p = app.characters.player; // just for debugging!
 
@@ -99,12 +99,17 @@ app.initCharacters = () => {
 
 class Character {
 
-  constructor( name, model, options={} ){
+  defaultOptions = {
+    position:  new THREE.Vector3(), //{ x: 0, y: 0, z: 0 },
+    rotation:  new THREE.Vector3(), //{ x: 0, y: 0, z: 0 },
+  };
+
+  constructor( name, model, options=this.defaultOptions ){
     console.log('Character()', name, model, options);
 
     this.name = name;
     this.modelName = model.name; // ???
-    this.opts = options;
+    this.opts = { ...this.defaultOptions, ...options };  // merge defaults with passed opts
 
     this.animation = {
       allActions: {},
@@ -118,6 +123,7 @@ class Character {
     // Why do we have to do this? It's not very clear, but
     // some object-related stuff (like collision detection
     // and positioning) doesn't work if you don't do it
+    this.object.position.set( this.opts.position.x, this.opts.position.y, this.opts.position.z );
     this.object.add( this.modelClone );
 
     // pass in original model
