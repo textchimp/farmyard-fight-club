@@ -10,11 +10,11 @@ ___
 
 ```bash
 # Clone this repo to somewhere familiar:
-git clone https://github.com/textchimp/farmyard-fight-club.git ~
+cd ~
+git clone https://github.com/textchimp/farmyard-fight-club.git
 
 # Go there:
-cd ~/farmyard-fight-club
-
+cd farmyard-fight-club
 
 # Open editor
 atom .
