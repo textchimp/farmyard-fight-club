@@ -55,15 +55,21 @@ reload
 
 ## Dreams / Wishlist
 
+- Camera POV switching: world to player
+- Collision detection!
+- Sounds! Footsteps etc, dying sounds
+- More actual game logic - how do you play the game?
+Do you just knock over other animals?
+Can you shoot them with laser beams from your eyes?
+Can you push each other off the edge of a platform? Chase each other around?
+- Better management of character/game state, and animation cueing
+- Augmented Reality / outdoor GPS-based playing?
 - More models!
+- Landscape! Mountains, water, forests, bits of grass, clouds etc?
+- Mobile-friendly controls? (on-screen buttons, gyro/tilt control?)
 - Decent game AI?????
 - Higher-res skybox images
-- More actual game logic - how do you play the game?
-  Do you just knock over other animals?
-  Can you shoot them with laser beams from your eyes?
-  Can you push each other off the edge of a platform?
 - Huge explosions
-- Sounds! Footsteps etc, dying sounds
 - Networked multiplayer mode - Firebase?
 
 
