@@ -1,12 +1,10 @@
-
 # Farmyard Fight Club
+
 ### A Three.js 3D Coronavirus Codealong
 
-___
-
+---
 
 #### INSTRUCTIONS
-
 
 ```bash
 # Clone this repo to somewhere familiar:
@@ -19,11 +17,11 @@ cd farmyard-fight-club
 # Open editor
 atom .
 
-# Recommended: install 'reload' package
-npm install -g reload
+# Install packages
+npm install
 
 # Start reload server
-reload
+npm run start
 
 # (NOTHING TO SEE YET)
 # (AWAIT FURTHER INSTRUCTIONS)
@@ -32,9 +30,7 @@ reload
 # https://pixabay.com/videos/search/abstract/
 ```
 
-
 ![screenshot](screenshot.png)
-
 
 ## GOALS
 
@@ -59,9 +55,9 @@ reload
 - Collision detection!
 - Sounds! Footsteps etc, dying sounds
 - More actual game logic - how do you play the game?
-Do you just knock over other animals?
-Can you shoot them with laser beams from your eyes?
-Can you push each other off the edge of a platform? Chase each other around?
+  Do you just knock over other animals?
+  Can you shoot them with laser beams from your eyes?
+  Can you push each other off the edge of a platform? Chase each other around?
 - Better management of character/game state, and animation cueing
 - Augmented Reality / outdoor GPS-based playing?
 - More models!
@@ -71,13 +67,6 @@ Can you push each other off the edge of a platform? Chase each other around?
 - Higher-res skybox images
 - Huge explosions
 - Networked multiplayer mode - Firebase?
-
-
-
-
-
-
-
 
 #### CREDITS
 
