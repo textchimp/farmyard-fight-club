@@ -176,7 +176,16 @@ window.addEventListener('dblclick', (event) => {
 
   raycaster.setFromCamera( mousePos, app.camera );
 
-  const intersects = raycaster.intersectObjects( app.scene.children, false );
+  const intersects = raycaster.intersectObjects( app.scene.children, true );
+
+  const arrow = new THREE.ArrowHelper(
+    raycaster.ray.direction,
+    raycaster.ray.origin,
+    200,  // overall arrow length
+    Math.random() * 0xFFFFFFF,
+    10, 1  // arrow head length & width
+  );
+  app.scene.add( arrow );
 
   if( intersects.length > 0 ){
 
