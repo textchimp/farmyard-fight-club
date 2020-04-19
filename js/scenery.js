@@ -8,14 +8,14 @@ app.initScenery = () => {
   const MTLFile = 'assets/models/scenery/trees.mtl';
   const PNGFilePrefix = 'assets/models/scenery/';
 
-  app.sceneryCount = 100;
+  app.sceneryCount = 20;
 
   app.addScenery = name => {
     if( !(name in app.scenery.models) ) {
       return console.error('Scenery model not defined:', name);
     }
     const itemClone = app.scenery.models[name].clone();
-    const spread = 200;
+    const spread = 100;
     itemClone.position.set(
       THREE.MathUtils.randFloatSpread(spread),
       0, // THREE.MathUtils.randFloatSpread(spread),

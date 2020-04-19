@@ -10,6 +10,7 @@ app.initKeys = () => {
       ArrowDown: true,
       ArrowLeft: true,
       ArrowRight: true,
+      c: true,   // toggle camera POV from world to player
     },
 
     state: {},  // which keys are currently held?
@@ -39,6 +40,34 @@ app.initKeys = () => {
         console.log('DOWN released!');
       }
       break;
+
+    case 'c':
+      if( pressed ){
+
+        if( app.controls.cameraPOV === 'world' ){
+          // Switch to 'player' and actually change camera POV
+          app.controls.cameraPOV = 'player';
+          app.cameraControls.saveState(); // remember the world POV pan angle and zoom level
+          player.object.add( app.camera );  // camera becomes a child of player, follows it
+          app.camera.position.set(0, 10, -20);
+          // 1. Work out what the player is looking at
+          // 2. Look at the same thing, or slighty ahead
+          const charPos = player.object.position.clone();
+          charPos.add( new THREE.Vector3(0, 10, 0) ); // look slightly ahead of current position
+          // charPos.y += 10;
+          app.camera.lookAt( charPos );
+        } else {
+          // switch to 'world'
+          app.controls.cameraPOV = 'world';
+          player.object.remove( app.camera );
+          app.cameraControls.reset(); // back to where we were when we did .saveState()
+        }
+        console.log('Camera POV', app.controls.cameraPOV);
+
+      }
+      break;
+
+
 
     default:
       console.log('Key not handled: ', ev.key);

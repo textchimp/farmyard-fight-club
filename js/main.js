@@ -8,6 +8,7 @@ app.controls = {
   debug: false,
   playerState: '',
   walkSpeed: 0.3,
+  cameraPOV: 'world',
 };
 
 app.init = () => {
@@ -124,6 +125,13 @@ app.animate = (now) => {
   // Deal with held-down keys that trigger repeating actions
   // TODO: use a changeState instead? ('turning')
   app.keys.handleHeldKeys();
+
+  if( app.controls.cameraPOV === 'player' ){
+    // keep camera looking in the right direction as the player moves
+    const charPos = app.characters.player.object.position.clone();
+    charPos.add( new THREE.Vector3(0, 10, 0) );
+    app.camera.lookAt( charPos );
+  }
 
   // app.characters.player.update()
   for( const name in app.characters ){

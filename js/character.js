@@ -83,7 +83,7 @@ app.initCharacters = () => {
     window.p = app.characters.player; // just for debugging!
 
 
-    for( let i = 0; i < 100; i++ ){
+    for( let i = 0; i < 20; i++ ){
 
       // Find a random model to use
       const names = Object.keys( app.models );
