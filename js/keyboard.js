@@ -18,7 +18,7 @@ app.initKeys = () => {
 
   app.keys.handleKey = (ev, pressed) => {
 
-    const player = app.characters.player;
+    const player = Player.one;
 
     switch( ev.key ){
 
@@ -83,7 +83,7 @@ app.initKeys = () => {
   app.keys.handleHeldKeys = () => {
 
     const turnIncrement = 0.03;
-    const player = app.characters.player;
+    const player = Player.one;
 
     if( app.keys.state.ArrowLeft ){
       player.object.rotateY( turnIncrement );

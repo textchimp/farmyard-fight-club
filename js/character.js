@@ -77,10 +77,12 @@ app.initCharacters = () => {
     console.log('All models loaded!');
 
     // Create some characters
-    app.addCharacter( 'player',   app.models.cow, { position: new THREE.Vector3(0, 0, 0) });
-    app.addCharacter( 'computer', app.models.zebra, { position: new THREE.Vector3(-5, 0, -5) } );
+    // app.addCharacter( 'player',   app.models.cow, { position: new THREE.Vector3(0, 0, 0) });
+    // app.addCharacter( 'computer', app.models.zebra, { position: new THREE.Vector3(-5, 0, -5) } );
 
-    window.p = app.characters.player; // just for debugging!
+    app.player = new Player('player', app.models.cow, { position: new THREE.Vector3(0, 0, 0) });
+
+    // window.p = app.characters.player; // just for debugging!
 
 
     for( let i = 0; i < 20; i++ ){
@@ -90,7 +92,7 @@ app.initCharacters = () => {
       const randomIndex = Math.floor( Math.random() * names.length );
       const modelName = names[ randomIndex ];
       console.log(names, modelName);
-      app.addCharacter( `${modelName}${i}`, app.models[modelName], {
+      new Character( `${modelName}${i}`, app.models[modelName], {
         position: new THREE.Vector3(
           THREE.Math.randFloatSpread( 100 ),
           0, // THREE.Math.randFloatSpread( 100 ),
@@ -109,16 +111,34 @@ app.initCharacters = () => {
   }; // modelManager.onLoad
 
 
-  app.addCharacter = ( name, model, options={} ) => {
-    const char = new Character( name, model, options );
-    app.characters[ name ] = char;
-    app.scene.add( char.object );
-  };
+  // app.addCharacter = ( name, model, options={} ) => {
+  //   const char = new Character( name, model, options );
+  //   // app.characters[ name ] = char;
+  //   app.scene.add( char.object );
+  // };
 
 };  // app.initCharacters();
 
 
 class Character {
+
+  // Keep track of all the Character objects we have created: Character.all
+  static all = {};
+
+  // Custom each method to loop over every character and run some callback
+  // Character.each( c => c.update() );
+  static each = (callback) => {
+    let i = 0;
+    for( const key in Character.all ){
+      const char = Character.all[ key ];
+      callback( char, key, i ); // run the given callback, passing in each character
+      i++;
+    }
+  };
+
+  // Ruby 'class method/attribute'
+  // User.all // call a method defined on the whole class, not on an instance
+  // ---
 
   defaultOptions = {
     position:  new THREE.Vector3(), //{ x: 0, y: 0, z: 0 },
@@ -155,6 +175,11 @@ class Character {
     // and positioning) doesn't work if you don't do it
     this.object.position.set( this.opts.position.x, this.opts.position.y, this.opts.position.z );
     this.object.add( this.modelClone );
+
+    app.scene.add( this.object ); // add to the game scene immediately
+
+    this.constructor.all[ name ] = this;  // add new character to our list of characters
+
 
     // pass in original model
     this.initialiseAnimations( model );
@@ -248,3 +273,22 @@ class Character {
 
 
 } // class Character
+
+// A Player (THE player) is just a special kind of Character
+class Player extends Character {
+
+  static all = {};
+
+  static one = null;  // Keep track of the main player we care about: Player.one
+
+  // override the Character constructor with a custom version for Player
+  constructor(...args){
+    super(...args);  // call the constructor() method of the super-class Character
+
+    if( Player.one === null ) {
+      Player.one = this;
+    }
+
+  } // constructor()
+
+}

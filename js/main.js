@@ -128,16 +128,16 @@ app.animate = (now) => {
 
   if( app.controls.cameraPOV === 'player' ){
     // keep camera looking in the right direction as the player moves
-    const charPos = app.characters.player.object.position.clone();
+    // TODO: optimise by only running this code when necessary, i.e
+    // when the player is actually moving or changing direction
+    const charPos = Player.one.object.position.clone();
     charPos.add( new THREE.Vector3(0, 10, 0) );
     app.camera.lookAt( charPos );
   }
 
-  // app.characters.player.update()
-  for( const name in app.characters ){
-    const char = app.characters[ name ];
-    char.update( deltaTime );
-  } // should use app.eachChar()
+  Player.one.update( deltaTime );
+
+  Character.each( c => c.update(deltaTime) );
 
   app.stats.update();
   app.renderer.render( app.scene, app.camera ); // actually draw the scene
