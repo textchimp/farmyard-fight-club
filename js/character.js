@@ -291,4 +291,36 @@ class Player extends Character {
 
   } // constructor()
 
-}
+  // N = 100
+  // 100 x 100 = 600,000
+
+  // Override the Character base class update(), so we can do collision detection
+  update( deltaTime ){
+    super.update( deltaTime ); // still use the parent's version of update()
+
+    // Collision detection!
+    // For each NPC, check if we are too close i.e. we have a collision with them
+    Character.each( char => {
+
+      if( this.collisionDetect(char) ){
+        console.log(`COLLISION! ${this.name} with ${char.name} `);
+      }
+
+    }); // Check each NPC for collisions
+
+  } // update()
+
+
+  collisionDetect( other ){
+
+    // 1. Naive attempt: just check the distance:
+    // Math.sqrt( x*x + y*y + z*z )
+    return this.object.position.distanceToSquared( other.object.position) < 20;
+
+    // Not accurate enough! Need to do "bounding box intersection" collision detection
+
+  } // collisionDetect()
+
+
+
+} // class Player extends Character
