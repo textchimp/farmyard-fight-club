@@ -25,8 +25,10 @@ app.initKeys = () => {
     case 'ArrowUp':
       if( pressed ){
         player.changeState('walk');
+        app.sounds.walk.audio.play();
       } else {
         player.changeState('idle');
+        app.sounds.walk.audio.stop();
       }
       break;
 

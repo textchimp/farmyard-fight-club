@@ -2,7 +2,7 @@ app.initAudio = () => {
   console.log('Initialising audio...');
 
   app.sounds = {
-    walk:     { url: 'assets/audio/walk.mp3', loop: true },
+    walk:     { url: 'assets/audio/walk.mp3', loop: true, rate: 0.7 },
     cow:      { url: 'assets/audio/cow.mp3' },
     pig:      { url: 'assets/audio/pig.mp3' },
     sheep:    { url: 'assets/audio/sheep.mp3' },
@@ -25,7 +25,7 @@ app.initAudio = () => {
       sound.audio.setBuffer( buffer );
       sound.audio.setLoop( sound.loop || false );
       sound.audio.setVolume( 0.5 );
-      sound.audio.setPlaybackRate( 1 );
+      sound.audio.setPlaybackRate( sound.rate || 1 );
     });
 
   } // for each sound

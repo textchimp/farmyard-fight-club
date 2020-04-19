@@ -374,6 +374,9 @@ class Player extends Character {
 
           char.changeState('death');
 
+          // Hooray for new 'safe navigation' operator '?.'
+          app.sounds[ char.modelName ]?.audio?.play(); // play the death sound!
+
         }
         // else {
         //   char.box.material.color.set( 0xFFFF00 );

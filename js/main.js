@@ -161,6 +161,44 @@ window.addEventListener('resize', () => {
   app.renderer.setSize( app.width, app.height );
 });
 
+
+const mousePos = new THREE.Vector2();
+const raycaster = new THREE.Raycaster();
+
+window.addEventListener('dblclick', (event) => {
+  // GOTCHA: dblclick event also causes a single click event
+  // to be triggered
+  console.log('dblclick', event);
+
+  // Convert coordinate system for click to -1..1 range for raycaster
+  mousePos.x = ( event.clientX / app.width  ) * 2 - 1;
+  mousePos.y = ( event.clientY / app.height ) * 2 - 1;
+
+  raycaster.setFromCamera( mousePos, app.camera );
+
+  const intersects = raycaster.intersectObjects( app.scene.children, false );
+
+  if( intersects.length > 0 ){
+
+    const first = intersects[ 0 ];
+    console.log('intersect!', intersects);
+
+    // // first.object.parent.visible = false;
+    // first.object.traverseAncestors( a => {
+    //   if( a.type === 'Scene' ){
+    //     a.visible = false;
+    //   }
+    // });
+
+    app.cameraControls.target.copy( first.point );
+    app.cameraControls.update();
+
+  }
+
+}); // dblclick handler
+
+
+
 app.lib = {
   randArray( array ){
     const index = THREE.Math.randInt(0, array.length-1);
