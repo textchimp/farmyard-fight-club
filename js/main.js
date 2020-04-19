@@ -20,7 +20,11 @@ app.init = () => {
     app.spotlight.color.setStyle( val );
   });
 
-  app.gui.add( app.controls, 'debug' );
+  app.gui.add( app.controls, 'debug' ).onChange( val => {
+    // Make bounding boxes visible in debug mode
+    Character.each( c => c.box.visible = val );
+    Player.one.box.visible = val;
+  });
 
   app.gui.add( app.controls, 'walkSpeed', 0, 1);
 

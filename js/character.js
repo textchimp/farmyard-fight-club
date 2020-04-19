@@ -80,7 +80,7 @@ app.initCharacters = () => {
     // app.addCharacter( 'player',   app.models.cow, { position: new THREE.Vector3(0, 0, 0) });
     // app.addCharacter( 'computer', app.models.zebra, { position: new THREE.Vector3(-5, 0, -5) } );
 
-    app.player = new Player('player', app.models.cow, { position: new THREE.Vector3(0, 0, 0) });
+    new Player('player', app.models.cow, { position: new THREE.Vector3(0, 0, 0) });
 
     // window.p = app.characters.player; // just for debugging!
 
@@ -169,14 +169,29 @@ class Character {
 
     // Make a clone of the loaded model data
     this.modelClone = THREE.SkeletonUtils.clone( model.gltf.scene );
+    // GOTCHA: SkeletonUtils.clone() does NOT clone the materials of the model, for
+    // efficiency reasons
+
+
     this.object = new THREE.Object3D();
     // Why do we have to do this? It's not very clear, but
     // some object-related stuff (like collision detection
     // and positioning) doesn't work if you don't do it
     this.object.position.set( this.opts.position.x, this.opts.position.y, this.opts.position.z );
     this.object.add( this.modelClone );
-
     app.scene.add( this.object ); // add to the game scene immediately
+
+    // Create a bounding box object for each character
+    this.box = new THREE.BoxHelper( this.modelClone, 0xFFFF00  );
+    this.box.name = 'boundingBox';
+    this.box.geometry.computeBoundingBox(); // just once, so we have access to this.box.boundingBox
+    this.box.visible = app.controls.debug;
+    this.object.add( this.box );
+
+    if( this.constructor === Character ){
+      // Only run this code for Characters, not for the Player
+      this.object.lookAt( Player.one.object.position );
+    }
 
     this.constructor.all[ name ] = this;  // add new character to our list of characters
 
@@ -194,6 +209,8 @@ class Character {
     const defaultAnimation = 'idle';
 
     this.animation.mixer = new THREE.AnimationMixer( this.modelClone );
+
+    this.animation.mixer.addEventListener('finished', this.handleAnimationFinished );
 
     // Init all clips for this model's list of animations
     // (clips are controlled by the mixer, allow start/stop/xfade etc)
@@ -219,7 +236,45 @@ class Character {
     this.animation.action.timeScale = 1;
     this.animation.action.reset().play();
 
+    // special-case code to control e.g. the looping of certain animations
+    // TODO: define these unique behaviours in an animationOptions object per-animation
+    switch( name ){
+    case 'death':
+      this.animation.action.setLoop( THREE.LoopOnce ); // play once
+      this.animation.action.clampWhenFinished = true;  // stop when finished, don't go back to start
+      break;
+    } // switch( name ) special-case code
+
+
   } // changeAnimation()
+
+
+  // This is the callback that runs whenever an animation finishes
+  // We need to use this arrow function syntax to get the correct value of 'this'
+  // inside this method, since it's a callback for the 'finished' event
+  handleAnimationFinished = (event) => {
+
+    console.log('ANIMATION FINISHED', event);
+
+    switch( event.action.name ){
+    case 'death':
+      // Turn animal into a wireframe ghost
+      // this.object.wireframe = true;
+      console.log('this', this );
+      this.object.traverse( child => {
+        if( child.isMesh ){
+          // Need to clone the material first, so we only wireframe THIS dead animal, not all
+          // 'horses' or 'cows' in the scene (which are sharing material references by default)
+          child.material = child.material.clone();
+          child.material.wireframe = true;  // Turn all meshes (for this dead animal) into wireframes!
+        }
+      });
+      this.changeState('walk');
+      break;
+    } // switch event.action.name
+
+
+  } // handleAnimationFinished()
 
 
   // This is called by app.animate, i.e. every re-render (60 times/sec)
@@ -274,10 +329,14 @@ class Character {
 
 } // class Character
 
+
+
 // A Player (THE player) is just a special kind of Character
 class Player extends Character {
 
   static all = {};
+
+  static updateCount = 0;
 
   static one = null;  // Keep track of the main player we care about: Player.one
 
@@ -300,13 +359,30 @@ class Player extends Character {
 
     // Collision detection!
     // For each NPC, check if we are too close i.e. we have a collision with them
-    Character.each( char => {
 
-      if( this.collisionDetect(char) ){
-        console.log(`COLLISION! ${this.name} with ${char.name} `);
-      }
+    if( Player.updateCount > 0 ){
+      Character.each( char => {
 
-    }); // Check each NPC for collisions
+        if(
+          char.state.action !== 'death' // ignore already-dead characters
+          &&
+          this.collisionDetect(char)
+        ){
+
+          // console.log(`COLLISION! ${this.name} with ${char.name} `);
+          char.box.material.color.set( 0xFF0000 );
+
+          char.changeState('death');
+
+        }
+        // else {
+        //   char.box.material.color.set( 0xFFFF00 );
+        // }
+
+      }); // Check each NPC for collisions
+    }
+
+    Player.updateCount++;
 
   } // update()
 
@@ -315,9 +391,18 @@ class Player extends Character {
 
     // 1. Naive attempt: just check the distance:
     // Math.sqrt( x*x + y*y + z*z )
-    return this.object.position.distanceToSquared( other.object.position) < 20;
+    // return this.object.position.distanceToSquared( other.object.position) < 20;
 
     // Not accurate enough! Need to do "bounding box intersection" collision detection
+    const playerBox = this.box.geometry.boundingBox.clone();
+    const otherBox  = other.box.geometry.boundingBox.clone();
+
+    playerBox.applyMatrix4( this.object.matrixWorld );  // TODO: WTF is applyMatrix4 ???
+    otherBox.applyMatrix4( other.object.matrixWorld );
+
+    // TODO: why does this return true for every character the FIRST time it checks?
+    return playerBox.intersectsBox( otherBox );
+
 
   } // collisionDetect()
 
