@@ -115,6 +115,7 @@ app.init = () => {
 
   app.initKeys();  // setup keyboard handlers
 
+  app.initAudio();  // load sound effects
 
 }; // app.init()
 
